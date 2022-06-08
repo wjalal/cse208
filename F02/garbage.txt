@@ -1,0 +1,14 @@
+    // vector<tuple<double, int>> vertices;
+    // for (i=0; i<V; i++) vertices.push_back(make_tuple(dist[i], i));
+    //set <int, greater<int> > S;
+    
+    //for (i=0; i<V; i++) Q.push(make_tuple(dist[i], i));
+
+    // set<int, greater<int> >::iterator itr;
+    // cout << "\nThe set s1 is : \n";
+    // for (itr = S.begin(); itr != S.end(); itr++) {
+    //     cout << *itr << " ";
+    // };
+    // cout << endl;
+
+    //cout << cost << endl;

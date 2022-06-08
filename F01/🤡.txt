@@ -1,0 +1,87 @@
+clearVisits();
+    int nV = 0, nE = 0, nT = 0, i; 
+    bool cycleFound = false;
+    sort (edgeList.begin(), edgeList.end());
+    for (i=0; nE != V-1; i++) {
+        cout << nE << " " << nV << " " << nT << endl;
+        int nT_ = nT;
+        if (!isVisited[get<1>(edgeList[i])] && !isVisited[get<2>(edgeList[i])]) nT_++;
+        if (isVisited[get<1>(edgeList[i])] && isVisited[get<2>(edgeList[i])]) {
+            if (nE + 1 + nT_ <= nV ) nT_--;
+        };
+        cout << nE << " " << nV << " " << nT_ << endl;
+        if (nE + 1 + nT_ <= nV + !isVisited[get<1>(edgeList[i])] + !isVisited[get<2>(edgeList[i])]) {
+            nE++, cycleFound = false;
+            if (!isVisited[get<1>(edgeList[i])]) nV++, isVisited[get<1>(edgeList[i])] = true;
+            if (!isVisited[get<2>(edgeList[i])]) nV++, isVisited[get<2>(edgeList[i])] = true;
+            nT = nT_;
+            cout << "(" << get<1>(edgeList[i]) << ", " << get<2>(edgeList[i]) << "), " << endl;
+            cout << nE << " " << nV << " " << nT_ << endl;
+        } else {
+            cout << "Reject: (" << get<1>(edgeList[i]) << ", " << get<2>(edgeList[i]) << ") forms cycle " << endl;
+            if (!cycleFound) nT--, cycleFound = true;
+        };
+        cout << endl;
+    };
+    cout << endl;
+
+
+    double Graph::printKruskalMST() {
+    sort (edgeList.begin(), edgeList.end());
+    int i; Graph MST(V); double cost = 0.0;
+    for (i=0; i<E; i++) {
+        MST.addEdge (get<1>(edgeList[i]), get<2>(edgeList[i]), get<0>(edgeList[i]));
+        if (MST.hasCycle()) {
+            MST.popEdge();
+            //cout << "Reject: (" << get<1>(edgeList[i]) << ", " << get<2>(edgeList[i]) << ") forms cycle " << endl;
+        } else cost += get<0>(edgeList[i]);
+    };
+    MST.printEdges();
+    return cost;
+};
+
+double Graph::printPrimMST (int v = 0) {
+    int i, j, I, J, c=0; double cost = 0.0, currMin = INFINITY;
+    vector<tuple<double, int>>* adjList = new vector<tuple<double, int>>[V]; Graph MST(V);
+    for (i=0; i<E; i++) {
+        int v = get<1>(edgeList[i]), w = get<2>(edgeList[i]);
+        double weight = get<0>(edgeList[i]);
+        adjList[v].push_back(make_tuple(weight, w));
+        adjList[w].push_back(make_tuple(weight, v));
+    };
+
+    vector<int> visited;
+    visited.push_back(v);
+    while (visited.size() < V) {
+        for (i=0; i < visited.size(); i++) {
+            //cout << i <<"------" << endl;
+            for (j=0; j < adjList[visited[i]].size(); j++) {
+                //cout << j <<"---" << endl;
+                if (get<0>(adjList[visited[i]][j]) <= currMin) { 
+                    c = get<1>(adjList[visited[i]][j]);
+                    currMin = get<0>(adjList[visited[i]][j]);
+                    I = i, J = j;
+                    //cout << "min weight " << currMin << " found at " << I << ", " << c << endl;
+                };
+            };
+        };
+        //cout << "added (" << visited[I] << ", " << c << "), weight: " << currMin << endl;
+        MST.addEdge (visited[I], c, currMin);
+        if (MST.hasCycle()) {
+            MST.popEdge();
+            //cout << "Reject: (" << visited[I] << ", " << c << ") forms cycle " << endl;
+            //MST.printEdges();
+        } else {
+            visited.push_back(c), isVisited[c] = true;
+            cost +=  currMin;
+        };
+        adjList[visited[I]].erase(adjList[visited[I]].begin() + J);
+        for (int p=0; p < adjList[c].size(); p++) 
+            if (get<1>(adjList[c][p]) == visited[I]) adjList[c].erase(adjList[c].begin() + p);
+        currMin = INFINITY;
+        //for (int p=0; p<visited.size(); p++) cout << visited[p] << " ";
+        //cout << endl;
+    };
+    MST.printEdges();
+    return cost;
+};
