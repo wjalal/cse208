@@ -54,7 +54,7 @@ void Graph::printEdges() {
     int i;
     cout << "{";
     for (i=0; i<E-1; i++) 
-        cout << "(" << get<1>(edgeList[i]) << ", " << get<2>(edgeList[i]) << "), ";
+        cout << "(" << get<1>(edgeList[i]) << ", " << get<2>(edgeList[i]) << ", " << get<0>(edgeList[i]) << "), ";
     cout << "(" << get<1>(edgeList[i]) << ", " << get<2>(edgeList[i]) << ")";
     cout << "}" << endl;
 };
@@ -70,40 +70,18 @@ vector<tuple<double, int>>* Graph::getAdjList() {
     return adjList;
 };
 
-void Graph::runDijkstra (int s) {
-    int i, v;
-    for (i=0; i<V; i++) dist[i] = INFINITY, prev[i] = -1;
-    dist[s] = 0;
-    vector<tuple<double, int>>* adjList = getAdjList();
-
-    priority_queue <tuple<double, int>, vector<tuple<double, int>>, greater<tuple<double,int>> > Q;
-    Q.push(make_tuple(dist[s], s));
-
-    while (!Q.empty()) {
-        int u = get<1> (Q.top());
-        Q.pop();
-        for (v=0; v < adjList[u].size(); v++) {
-            int a = u, b = get<1>(adjList[u][v]), weight = get<0>(adjList[u][v]);
-            if (dist[b] > dist[a] + weight) {
-                dist[b] = dist[a] + weight;
-                prev[b] = a;
-                Q.push(make_tuple(dist[b], b));
-            };
-        };
-    };
-};
-
 bool Graph::runBellmanFord (int s) {
     int i, j;
-    for (i=0; i<V; i++) dist[i] = INFINITY, prev[i] = -1;
-    dist[s] = 0;
+    for (i=0; i<V; i++) dist[i] = 0.0, prev[i] = -1;
+    dist[s] = 1.0;
     vector<tuple<double, int>>* adjList = getAdjList();
 
     for (i=0; i<V-1; i++) {
         for (j=0; j<E; j++) {
-            int a = get<1>(edgeList[j]), b = get<2>(edgeList[j]), weight = get<0>(edgeList[j]);
-            if (dist[b] > dist[a] + weight) {
-                dist[b] = dist[a] + weight;
+            int a = get<1>(edgeList[j]), b = get<2>(edgeList[j]);
+            double weight = get<0>(edgeList[j]);
+            if (dist[b] < dist[a] * weight) {
+                dist[b] = dist[a] * weight;
                 prev[b] = a;
             };
         }
@@ -111,7 +89,7 @@ bool Graph::runBellmanFord (int s) {
 
     for (j=0; j<E; j++) {
         int a = get<1>(edgeList[j]), b = get<2>(edgeList[j]), weight = get<0>(edgeList[j]);
-        if (dist[b] > dist[a] + weight) {
+        if (dist[b] < dist[a] * weight) {
             cout << "The graph contains a negative cycle." << endl;
             return false;
         };
@@ -125,15 +103,16 @@ void Graph::printSSSP (int s, int d) {
     while (a != -1) S.push(a), a = prev[a];
     while (!S.empty()) cout << S.top() << "->", S.pop();
     cout << "\b\b  " << endl;
+    // for (int i=0; i<V; i++) cout << dist[i] << ", ";
+    // cout << endl;
 };
 
 int main (int argc, char** argv) {
 
-    if (argc != 2) cout << "Invalid CLI args, defaulting to Dijkstra's algorithm" << endl;
     int N, M, i, v, w, s, d;
     double weight, cost;
     ifstream fin;
-    fin.open ("sssp.in");
+    fin.open ("F02/sssp.in");
     fin >> N >> M;
     Graph g(N);
     for (i=0; i<M; i++) {
@@ -142,14 +121,7 @@ int main (int argc, char** argv) {
     };
     fin >> s >> d;
 
-    if(argc == 2) {
-        if(!strcasecmp(argv[1], "b")) {
-            if (g.runBellmanFord(s)) g.printSSSP (s,d);
-            return 0;
-        } else if(strcasecmp(argv[1], "d")) 
-            cout << "Invalid CLI args, defaulting to Dijkstra's algorithm" << endl;
-    };
-    g.runDijkstra(s), g.printSSSP (s, d);
+    if (g.runBellmanFord(s)) g.printSSSP (s,d);
 
     fin.close();
     return 0;

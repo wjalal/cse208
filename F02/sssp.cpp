@@ -20,12 +20,15 @@ class Graph {
         void clearVisits();
         Graph(int V);
         vector<tuple<double, int>>*  getAdjList();
+        Graph getTranspose();
         void addEdge (int v, int w, double weight);
         void popEdge(); 
         void printEdges();
-        void runDijkstra (int s);
-        bool runBellmanFord (int s);
+        void runDijkstra (int s, bool ssdp);
+        bool runBellmanFord (int s, bool ssdp);
         void printSSSP (int s, int d);
+        void printSDSP (int s, int d);
+        int getSSSPDest (int s);
 }; 
 
 Graph::Graph (int V) {
@@ -70,11 +73,18 @@ vector<tuple<double, int>>* Graph::getAdjList() {
     return adjList;
 };
 
-void Graph::runDijkstra (int s) {
+Graph Graph::getTranspose() {
+    Graph gT(V);
+    for (int e=0; e<E; e++)
+        gT.addEdge (get<2>(edgeList[e]), get<1>(edgeList[e]), get<0>(edgeList[e]));
+    return gT;
+};
+
+void Graph::runDijkstra (int s, bool sdsp = false) {
     int i, v;
     for (i=0; i<V; i++) dist[i] = INFINITY, prev[i] = -1;
     dist[s] = 0;
-    vector<tuple<double, int>>* adjList = getAdjList();
+    vector<tuple<double, int>>* adjList = sdsp? getTranspose().getAdjList() : getAdjList();
 
     priority_queue <tuple<double, int>, vector<tuple<double, int>>, greater<tuple<double,int>> > Q;
     Q.push(make_tuple(dist[s], s));
@@ -93,11 +103,11 @@ void Graph::runDijkstra (int s) {
     };
 };
 
-bool Graph::runBellmanFord (int s) {
+bool Graph::runBellmanFord (int s, bool sdsp = false) {
     int i, j;
     for (i=0; i<V; i++) dist[i] = INFINITY, prev[i] = -1;
     dist[s] = 0;
-    vector<tuple<double, int>>* adjList = getAdjList();
+    vector<tuple<double, int>>* adjList = sdsp? getTranspose().getAdjList() : getAdjList();
 
     for (i=0; i<V-1; i++) {
         for (j=0; j<E; j++) {
@@ -119,6 +129,8 @@ bool Graph::runBellmanFord (int s) {
     return true;
 };
 
+
+
 void Graph::printSSSP (int s, int d) {
     cout << "Shortest path cost: " << dist[d] << endl;
     stack<int> S; int a = d;
@@ -127,6 +139,23 @@ void Graph::printSSSP (int s, int d) {
     cout << "\b\b  " << endl;
 };
 
+void Graph::printSDSP (int s, int d) {
+    cout << "Shortest path cost: " << dist[s] << endl;
+    stack<int> S; int a = s;
+    while (a != -1) S.push(a), a = prev[a];
+    while (!S.empty()) cout << S.top() << "->", S.pop();
+    cout << "\b\b  " << endl;
+};
+
+int Graph::getSSSPDest (int s) {
+    double minDist = INFINITY; int i, d;
+    // for (i=0; i<V; i++) cout << dist[i] << ", ";
+    // cout << endl;
+    for (i=0; i<V; i++) 
+        if (dist[i] < minDist && i != s) 
+            minDist = dist[i], d = i;
+    return d;
+};
 
 
 int main (int argc, char** argv) {
@@ -135,7 +164,7 @@ int main (int argc, char** argv) {
     int N, M, i, v, w, s, d;
     double weight, cost;
     ifstream fin;
-    fin.open ("sssp.in");
+    fin.open ("F02/sssp.in");
     fin >> N >> M;
     Graph g(N);
     for (i=0; i<M; i++) {
@@ -151,7 +180,9 @@ int main (int argc, char** argv) {
         } else if(strcasecmp(argv[1], "d")) 
             cout << "Invalid CLI args, defaulting to Dijkstra's algorithm" << endl;
     };
-    g.runDijkstra(s), g.printSSSP (s, d);
+    g.runDijkstra(s), g.printSDSP (s, d);
+    //cout << g.getSSSPDest(s) << endl;
+    //g.printSSSP (s, g.getSSSPDest(s));
 
     fin.close();
     return 0;
