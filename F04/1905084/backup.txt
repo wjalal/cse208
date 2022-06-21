@@ -1,0 +1,91 @@
+Graph G(12);
+int w = 49, l = 86, r = 27;
+
+G.addEdge (0, 5, 3);
+G.addEdge (0, 6, 8);
+G.addEdge (0, 7, 7);
+G.addEdge (0, 8, 2);
+G.addEdge (0, 9, 7);
+G.addEdge (0, 10, 0);
+
+G.addEdge (5, 1, INFINITY);
+G.addEdge (5, 2, INFINITY);
+G.addEdge (6, 1, INFINITY);
+G.addEdge (6, 3, INFINITY);
+G.addEdge (7, 1, INFINITY);
+G.addEdge (7, 4, INFINITY);
+G.addEdge (8, 2, INFINITY);
+G.addEdge (8, 3, INFINITY);
+G.addEdge (9, 2, INFINITY);
+G.addEdge (9, 4, INFINITY);
+G.addEdge (10, 3, INFINITY);
+G.addEdge (10, 4, INFINITY);
+
+G.addEdge (1, 11, w+r-75);
+G.addEdge (2, 11, w+r-71);
+G.addEdge (3, 11, w+r-69);
+G.addEdge (4, 11, w+r-63);
+cout << G.EdmondsKarp(0, 11)<< endl;
+
+
+4
+Atlanta 83 71 8 0 1 6 1
+Philadelphia 80 79 3 1 0 0 2
+New_York 78 78 6 6 0 0 0
+Montreal 77 82 3 1 2 0 0
+
+5
+New_york  75 59 28  0 3 8 7 3
+Baltimore 71 63 28  3 0 2 7 4
+Boston    69 66 27  8 2 0 0 0
+Toronto   63 72 27  7 7 0 0 0
+Detroit   49 86 27  3 4 0 0 0
+
+0 0 0 0 0 3 8 7 2 7 0 0 
+0 0 0 0 0 0 0 0 0 0 0 1 
+0 0 0 0 0 0 0 0 0 0 0 5 
+0 0 0 0 0 0 0 0 0 0 0 7 
+0 0 0 0 0 0 0 0 0 0 0 13 
+0 inf inf 0 0 0 0 0 0 0 0 0 
+0 inf 0 inf 0 0 0 0 0 0 0 0 
+0 inf 0 0 inf 0 0 0 0 0 0 0 
+0 0 inf inf 0 0 0 0 0 0 0 0 
+0 0 inf 0 inf 0 0 0 0 0 0 0 
+0 0 0 inf inf 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 0 0 
+
+0 0 0 0 0 0 1 0 0 0 0 0 
+0 0 0 0 0 1 0 0 0 0 0 0 
+0 0 0 0 0 2 0 0 2 1 0 0 
+0 0 0 0 0 0 7 0 0 0 0 0 
+0 0 0 0 0 0 0 7 0 6 0 0 
+3 inf inf 0 0 0 0 0 0 0 0 0 
+7 inf 0 inf 0 0 0 0 0 0 0 0 
+7 inf 0 0 inf 0 0 0 0 0 0 0 
+2 0 inf inf 0 0 0 0 0 0 0 0 
+7 0 inf 0 inf 0 0 0 0 0 0 0 
+0 0 0 inf inf 0 0 0 0 0 0 0 
+0 1 5 7 13 0 0 0 0 0 0 0 
+
+26
+
+
+
+
+
+ // for (i=0; i<N; i++) { 
+    //     if (E[i]) {
+    //         cout << names[i] << " is eliminated." << endl;
+    //         cout << "They can win at most " << W[i] + R[i] << " games." << endl;
+    //         for (j=0, t=0, m=0; j<N; j++) {
+    //             if (!E[j] && W[j] > W[i] + R[i]) {
+    //                 t += W[j], m += l[i][j];
+    //                 cout << names[j] << ", ";
+    //             };
+    //         };
+    //         cout << "\b\b have won a total of " << t << " games." << endl;
+    //         cout << "They play each other " << m << " times." << endl;
+    //         cout << "So on average, each team wins " << t + m*(m-1)/2 << "/" << m 
+    //              << " = " << double(t + m*(m-1)/2)/double(m) << " games." << endl << endl;
+    //     };
+    // };
