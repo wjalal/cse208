@@ -27,7 +27,7 @@ class RedBlackTree {
     }
     else if (root->data < key) {
         cnt++;
-        //cnt += getCountHelper(root->left, key);
+        cnt += getCountHelper(root->left, key);
         cnt += getCountHelper(root->right, key);
     }
     else {
@@ -363,10 +363,10 @@ class RedBlackTree {
 int main() {
     RedBlackTree rbt;
 
-    freopen("F06/rbt.in", "r", stdin);
+    freopen("F06/in.txt", "r", stdin);
 	int k,e,x;
 	bool check;
-    ifstream fin("F06/rbt.in");
+    ifstream fin("F06/in.txt");
     fin >> k ;
     cout<<k<<endl;
     while(k--){
