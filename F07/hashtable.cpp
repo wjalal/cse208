@@ -12,18 +12,11 @@ long long int power (long long int a, long long int b) {
     return x;
 };
 
-// unsigned int h2 (char* a, int N) {
-//     int i;
-//     unsigned long long int x = 1;
-//     for (i=0; a[i]!='\0'; i++) x *= (a[i] - 'a' + 1);
-//     return (unsigned int) (x % N);
-// };
-
 unsigned int h2 (char* a, int N) {
     unsigned long long int x = 5381;
     while (int c = *a++) x = ((x << 5) + x) + c;
     return (unsigned int) (x % N);
-}
+};
 
 unsigned int h1 (char* a, int N) {
     int i, z = 31;
@@ -33,8 +26,8 @@ unsigned int h1 (char* a, int N) {
 };
 
 double successRate (unsigned int (*h)(char*, int)) {
-    double avg = 0; int p;
-    for (p=0; p<20000; p++) {
+    double avg = 0; int p, I = 200000;
+    for (p=0; p<I; p++) {
         srand (time(0));
         int i, j, done[100], unique = 0;
         char s[8] = "       ";
@@ -48,8 +41,8 @@ double successRate (unsigned int (*h)(char*, int)) {
             if (done[i] >= 0) unique++;
         avg += 1.0 * (unique);
     };
-    return avg/20000;
-}
+    return avg/I;
+};
 
 int main() {
     cout << "h1: " << successRate (&h1) << endl;
