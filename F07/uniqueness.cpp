@@ -1,32 +1,11 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-
-using namespace std;
-
-long long int power (long long int a, long long int b) {
-    if (b == 0) return 1;
-    long long int x = power (a, b/2);
-    x *= x;;
-    if (b%2 == 1) x *= a;
-    return x;
-};
-
-unsigned int h2 (char* a, int N) {
-    unsigned long long int x = 5381;
-    while (int c = *a++) x = ((x << 5) + x) + c;
-    return (unsigned int) (x % N);
-};
-
-unsigned int h1 (char* a, int N) {
-    int i, z = 31;
-    long long int x = 0;
-    for (i=0; a[i]!='\0'; i++) x += a[i] * power (z, i);
-    return (unsigned int) (x % N);
-};
+#include <cstring>
+#include "hashFunctions.h"
 
 double successRate (unsigned int (*h)(char*, int)) {
-    double avg = 0; int p, I = 200000;
+    double avg = 0; int p, I = 20000;
     for (p=0; p<I; p++) {
         srand (time(0));
         int i, j, done[100], unique = 0;
@@ -35,7 +14,7 @@ double successRate (unsigned int (*h)(char*, int)) {
         for (i=0; i<100; i++) {
             for (j=0; j<7; j++) s[j] = 97 + abs(rand()) % 25;
             //cout << s << " " << h(s, 100) << endl;
-            done[h(s, 100)]++;
+            done[h(s, 100) % 100]++;
         };
         for (i=0; i<100; i++) 
             if (done[i] >= 0) unique++;
@@ -47,5 +26,7 @@ double successRate (unsigned int (*h)(char*, int)) {
 int main() {
     cout << "h1: " << successRate (&h1) << endl;
     cout << "h2: " << successRate (&h2) << endl;
-}
-
+    char str[] = "least efficient hashing algorithm in Mengjiala province, sir";
+    cout << h1(str, INT32_MAX) << endl;
+    cout << h2(str, INT32_MAX) << endl;
+};

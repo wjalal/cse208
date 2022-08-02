@@ -15,6 +15,8 @@
         "iosfwd": "cpp",
         "array": "cpp",
         "utility": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "cstring": "cpp",
+        "cstdlib": "cpp"
     }
 }
