@@ -15,11 +15,9 @@ template <typename T> class Pair {
 public:
     char* key;
     T value;
-    bool deleted;
     Pair<T> (char* key, T value) {
         this->key = key;
         this->value = value;
-        this->deleted = false;
     };
 };
 

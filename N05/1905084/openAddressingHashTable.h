@@ -31,7 +31,7 @@ public:
         int i = 0, j;
         while (i < N) {
             j = h (x->key, i);
-            if (!T[j] || T[j]->deleted) {
+            if (!T[j] || T[j] == DELETED) {
                 T[j] = x;
                 break;
             } else i++;
@@ -48,7 +48,7 @@ public:
         int i = 0, j = h(key, i), pCount = 0;
         while (T[j] && i<N) {
             j = h(key, i);
-            if (!T[j]) return pCount;
+            if (!T[j] || T[j]==DELETED) return pCount;
             //cout << "hello" << endl;
             if (!strcmp(T[j]->key, key)) return pCount;
             i++, pCount++;
@@ -60,9 +60,9 @@ public:
         int i = 0, j = h(key, i);
         while (T[j] && i<N) {
             j = h(key, i);
-            if (!T[j]) return;
+            if (!T[j] || T[j]==DELETED) return;
             if (!strcmp(T[j]->key, key)) {
-                T[j]->deleted = true;
+                T[j] = DELETED;
                 break;
             };
             i++;
@@ -71,7 +71,7 @@ public:
 
     void print() {
         for (int i=0; i<N; i++) {
-            if (!T[i] || T[i]->deleted) cout << "---" << endl;
+            if (!T[i] || T[i] == DELETED) cout << "---" << endl;
             else cout << i+1 << " " << T[i]->key << "  " <<  (int) (T[i]->key)[7] << endl;
         };
     };

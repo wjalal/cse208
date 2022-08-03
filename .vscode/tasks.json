@@ -3,8 +3,8 @@
 	"tasks": [
 		{
 			"type": "cppbuild",
-			"label": "C/C++: g++-11 build active file",
-			"command": "/bin/g++-11",
+			"label": "C/C++: g++-8 build active file",
+			"command": "/bin/g++-8",
 			"args": [
 				"-fdiagnostics-color=always",
 				"-g",
@@ -19,7 +19,7 @@
 				"$gcc"
 			],
 			"group": "build",
-			"detail": "compiler: /bin/g++-11"
+			"detail": "compiler: /bin/g++-8"
 		}
 	]
 }
