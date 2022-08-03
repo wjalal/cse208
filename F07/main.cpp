@@ -68,10 +68,10 @@ void findTimes (int N, ofstream& fout, HashTable<int>* T, double bdst[4][6], dou
             } else wordsToSearch2[j] = wordsToDelete[j];
         };
 
-        chrono::_V2::steady_clock::time_point t1, t2; 
-        t1 = chrono::steady_clock::now();
+            
+        auto t1 = chrono::steady_clock::now();
         for (j=0; j<p10; j++) bdnp[cr][i] += T->search(wordsToSearch[j]);
-        t2 = chrono::steady_clock::now();
+        auto t2 = chrono::steady_clock::now();
         bdst[cr][i] = chrono::duration_cast<chrono::nanoseconds>(t2 - t1).count() / p10;
         bdnp[cr][i] /= 1.0 * p10;
 
